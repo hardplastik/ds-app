@@ -2,10 +2,9 @@
 
 import ClientListItem from "@/components/client-list-item";
 import { useAuth } from "@/components/contexts/AuthContext";
-import { Button } from "@/components/ui/button";
+import NavBarHeader from "@/components/ui/nav-bar-header";
 import { User } from "@/types/User";
 import { useQuery } from "@tanstack/react-query";
-import { PlusIcon } from "lucide-react";
 
 export default function ClientsListPage() {
 
@@ -24,15 +23,9 @@ export default function ClientsListPage() {
   })
 
   return (
-    <div className="min-h-screen bg-slate-50 text-white p-4">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold text-slate-900">Clientes</h1>
-        <Button variant="ghost" size="icon" className="text-slate-900">
-          <PlusIcon className="h-6 w-6" />
-        </Button>
-      </div>
-
-      <div className="space-y-3">
+    <div className="w-full min-h-dvh bg-slate-200">
+      <NavBarHeader title="Clientes"/>
+      <div className="flex flex-col gap-y-4 p-4">
         {clients?.map((client) => (
           <ClientListItem key={client.id} client={client}/>  
         ))}
