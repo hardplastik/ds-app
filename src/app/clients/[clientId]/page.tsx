@@ -6,6 +6,7 @@ import NavBarHeader from "@/components/ui/nav-bar-header";
 import { getClient } from "@/services/clients";
 import { useQuery } from "@tanstack/react-query";
 import { PlusIcon } from "lucide-react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 
 export default function ClientPage() {
@@ -28,10 +29,12 @@ export default function ClientPage() {
       }/>
       <div className="w-full flex flex-col gap-y-4 items-center p-4">
         <ClientInfo client={client} />
-        <Button className="w-full font-extralight">
-          <PlusIcon width={32} height={32} className="flex-none" />
-          <span>Crear Programa</span>
-        </Button>
+        <Link href="/programs/add" className="w-full">
+          <Button className="w-full font-extralight">
+            <PlusIcon width={32} height={32} className="flex-none" />
+            <span>Crear Programa</span>
+          </Button>
+        </Link>
       </div>
     </div>
   );
