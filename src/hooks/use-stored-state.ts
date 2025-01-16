@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 
-function useStoredState<T>(key: string, defaultValue: T | null = null): [T | null, React.Dispatch<React.SetStateAction<T | null>>] {
+function useStoredState<T>(key: string, defaultValue: T): [T, React.Dispatch<React.SetStateAction<T>>] {
   
-  const getInitialValue = (): T | null => {
+  const getInitialValue = (): T => {
     const storedValue = localStorage.getItem(key);
     return storedValue ? JSON.parse(storedValue) : defaultValue;
   };
 
-  const [state, setState] = useState<T | null>(getInitialValue);
+  const [state, setState] = useState<T>(getInitialValue);
 
   useEffect(() => {
     if (state === null) {

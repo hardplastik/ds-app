@@ -1,17 +1,24 @@
 "use client";
 
-import ProgramForm, { Program } from "@/components/domain/program-form";
+import ProgramConfigurator from "@/components/domain/program-configurator";
+import ProgramForm, { ProgramSeed } from "@/components/domain/program-form";
 import { Button } from "@/components/ui/button";
 import useStoredState from "@/hooks/use-stored-state";
 import { useEffect, useState } from "react";
 
+
+export enum ProgramWizardStep {
+  FORM = 1,
+  CONFIGURATION = 2
+}
+
 export default function ProgramsAddPage() {
 
-  const [program, setProgram] = useStoredState<Program>('program', null);
+  const [program] = useStoredState<ProgramSeed|null>('program', null);
 
   const [isValid, setIsvalid] = useState<boolean>(false);
 
-
+  const [currentWizardStep, setCurrentWizardStep] = useState<ProgramWizardStep>(ProgramWizardStep.CONFIGURATION);
 
   useEffect(() => {
     
@@ -28,9 +35,17 @@ export default function ProgramsAddPage() {
   return (
     <div className="w-full h-full flex-grow flex flex-col justify-between overflow-auto p-4">
       <div>
-        <ProgramForm onUpdate={(value) => setProgram(value)}/>
+        {
+          currentWizardStep == ProgramWizardStep.FORM 
+          && <ProgramForm/>
+        }
+        {
+          currentWizardStep == ProgramWizardStep.CONFIGURATION 
+          && program != null
+          && <ProgramConfigurator program={program}/>
+        }
       </div>
-      <Button className="w-full" disabled={!isValid}>Continuar</Button>
+      <Button className="w-full" disabled={!isValid} onClick={() => setCurrentWizardStep(currentWizardStep + 1)}>Continuar</Button>
     </div>
   );
 }

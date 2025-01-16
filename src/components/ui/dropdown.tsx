@@ -3,6 +3,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 
 export interface DropDownProps {
   placeholder?: string;
+  value?: string | number;
   options?: DropDownOptionProps[];
   onSelect?: (vale: string) => void 
 }
@@ -14,11 +15,12 @@ export interface DropDownOptionProps {
 
 export default function DropDown({
   placeholder,
+  value,
   options,
   onSelect
 }: DropDownProps) {
   return (
-    <Select 
+    <Select value={value?.toString()}
           onValueChange={(value) => onSelect && onSelect(value)}
         >
           <SelectTrigger className="bg-slate-50 border-slate-900">

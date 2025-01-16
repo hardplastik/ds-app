@@ -4,29 +4,33 @@ import { useEffect, useState } from 'react'
 
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { format } from 'date-fns'
+import useStoredState from '@/hooks/use-stored-state'
+import { format, subDays } from 'date-fns'
 import DatePicker from '../ui/date-picker'
 import DropDown, { DropDownOptionProps } from '../ui/dropdown'
-export interface Program {
+export interface ProgramSeed {
   name: string
   startDate: string
   weeks: number
   sessionPerWeek: number
 }
 
-interface ProgramFormProps {
-  onUpdate: (program: Program) => void
-}
-
-
-export default function ProgramForm({onUpdate}: ProgramFormProps) {
+export default function ProgramForm() {
   
-  const [program, setProgram] = useState<Program>({
+  const [program, setProgram] = useStoredState<ProgramSeed>('program-seed', {
     name: '',
     startDate: '',
     weeks: 0,
     sessionPerWeek: 0
   });
+
+  useEffect(() => {
+
+    if (!date && program.startDate) {
+      setDate(subDays(program.startDate, 1));
+    }
+
+  }, [program]);
   
   const [date, setDate] = useState<Date>();
 
@@ -64,14 +68,6 @@ export default function ProgramForm({onUpdate}: ProgramFormProps) {
     value: 6,
   }];
 
-  useEffect(() => {
-
-    onUpdate(program);
-
-  }, [program]);
-  
-
-
   return (
     <div className='space-y-4'>
       <div className="space-y-1">
@@ -99,13 +95,13 @@ export default function ProgramForm({onUpdate}: ProgramFormProps) {
 
       <div className="space-y-1">
         <Label>Elige la duración en semanas</Label>
-        <DropDown options={weekOptions} placeholder='Seleccionar número de semanas' 
+        <DropDown value={program.weeks} options={weekOptions} placeholder='Seleccionar número de semanas' 
           onSelect={(value) => setProgram({ ...program, weeks: Number(value) })} />
       </div>
 
       <div className="space-y-1">
         <Label>Elige las sesiones por semana</Label>
-        <DropDown options={sessionsPerWeek} placeholder='Seleccionar número de sesiones por semana' 
+        <DropDown value={program.sessionPerWeek} options={sessionsPerWeek} placeholder='Seleccionar número de sesiones por semana' 
           onSelect={(value) => setProgram({ ...program, sessionPerWeek: Number(value) })} />
       </div>
     </div>
