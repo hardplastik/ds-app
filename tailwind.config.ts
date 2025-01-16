@@ -16,6 +16,17 @@ export default {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
   			},
+				'outer-space': {
+					100: "#d2d4d5",
+					200: "#a5a9ab",
+					300: "#797d81",
+					400: "#4c5257",
+					500: "#1f272d",
+					600: "#191f24",
+					700: "#13171b",
+					800: "#0c1012",
+					900: "#060809"
+				},
   			popover: {
   				DEFAULT: 'hsl(var(--popover))',
   				foreground: 'hsl(var(--popover-foreground))'

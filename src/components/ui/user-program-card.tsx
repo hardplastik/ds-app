@@ -18,7 +18,7 @@ export default function UserProgramCard({program}: UserProgramCardProps) {
             </div>
             <div className="w-full border-t border-slate-200 mb-2" />
             <div className="flex flex-col gap-x-1 gap-y-1">
-              <span className="font-medium text-xs text-slate-600">Semanas 4 - Sesiones por semana 4</span>
+              <span className="font-medium text-xs text-slate-600">Semanas {program.weeks} - Sesiones por semana {program.sessionsPerWeek}</span>
               <span className="font-medium text-xs text-slate-600">{format(new Date(program.enrollDatetime), "dd 'de' MMMM 'de' yyyy", {locale: es})}</span>
             </div>
           </div>

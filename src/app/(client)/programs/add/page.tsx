@@ -33,8 +33,7 @@ export default function ProgramsAddPage() {
   }, [program]);
 
   return (
-    <div className="w-full h-full flex-grow flex flex-col justify-between overflow-auto p-4">
-      <div>
+    <div className="w-full h-full flex-grow flex flex-col bg-slate-50 justify-between overflow-auto p-4">
         {
           currentWizardStep == ProgramWizardStep.FORM 
           && <ProgramForm/>
@@ -44,7 +43,6 @@ export default function ProgramsAddPage() {
           && program != null
           && <ProgramConfigurator program={program}/>
         }
-      </div>
       <Button className="w-full" disabled={!isValid} onClick={() => setCurrentWizardStep(currentWizardStep + 1)}>Continuar</Button>
     </div>
   );

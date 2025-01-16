@@ -26,7 +26,7 @@ export default function ClientPage() {
   });
 
   return (
-    <div className="w-full h-dvh bg-slate-200 flex flex-col">
+    <div className="w-full h-dvh bg-slate-50 flex flex-col">
       <NavBarHeader title={
           <div className="flex flex-col">
             <span className="font-bold text-lg text-slate-200">{client?.name} {client?.lastName}</span>

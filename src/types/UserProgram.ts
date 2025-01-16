@@ -6,4 +6,6 @@ export interface UserProgram {
   enrollDatetime: string;
   isStarted: boolean;
   user: User;
+  weeks: number;
+  sessionsPerWeek: number;
 }
