@@ -9,15 +9,14 @@ import { useEffect, useState } from "react";
 
 export enum ProgramWizardStep {
   FORM = 1,
-  CONFIGURATION = 2
+  CONFIGURATION = 2,
+  EXERCISE_SELECT = 3
 }
 
 export default function ProgramsAddPage() {
 
   const [program] = useStoredState<ProgramSeed|null>('program', null);
-
   const [isValid, setIsvalid] = useState<boolean>(false);
-
   const [currentWizardStep, setCurrentWizardStep] = useState<ProgramWizardStep>(ProgramWizardStep.CONFIGURATION);
 
   useEffect(() => {

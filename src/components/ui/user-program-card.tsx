@@ -14,7 +14,7 @@ export default function UserProgramCard({program}: UserProgramCardProps) {
         <CardHeader className="flex flex-col">
           <div className="flex flex-col gap-y-1">
             <div className="flex flex-col">
-              <Label className="font-bold text-lg text-slate-800">{program.name}</Label>
+              <Label className="font-semibold text-lg text-slate-800">{program.name}</Label>
             </div>
             <div className="w-full border-t border-slate-200 mb-2" />
             <div className="flex flex-col gap-x-1 gap-y-1">
