@@ -21,15 +21,16 @@ export interface ConfigSession {
 
 export interface ConfigExercise {
   id: string;
+  name: string;
   orderNumber: number
   notes: string;
   sets: ConfigSet[]
 }
 
 export interface ConfigSet {
-  targetReps: number;
-  targetWeight: number;
-  rpe: number;
-  unit: string;
+  targetReps?: number;
+  targetWeight?: number;
+  rpe?: number;
+  unit?: string;
   orderNumber: number;
 }

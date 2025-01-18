@@ -2,22 +2,31 @@ import { Exercise } from "@/types/Exercise";
 import { ConfigExercise, ConfigSession } from "@/types/ProgramConfig";
 import NavBarHeader from "./nav-bar-header";
 import { Button } from "./button";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
 export interface SelectExercisesProps {
   session: ConfigSession;
   exercisesCatalog: Exercise[];
+  isOpen: boolean;
   onSelect: (exercises: ConfigExercise[]) => void;  
+  onClose: () => void
 }
 
 export default function SelectExercises({
   session,
   exercisesCatalog,
-  onSelect
+  isOpen,
+  onSelect,
+  onClose
 }: SelectExercisesProps) {
 
-  const [selectedExercises, setSelectedExercises] = useState<ConfigExercise[]>(session.exercises);
+  const [selectedExercises, setSelectedExercises] = useState<ConfigExercise[]>([]);
+
+  useEffect(() => {
+    const exercises = JSON.parse(JSON.stringify(session.exercises));
+    setSelectedExercises(exercises);
+  }, [session, isOpen]);
 
   function onSelectExercise(exercise: Exercise) {
 
@@ -26,9 +35,12 @@ export default function SelectExercises({
     if (exerciseIndex == -1) {
       selectedExercises.push({
         id: exercise.id,
+        name: exercise.name,
         orderNumber: selectedExercises.length + 1,
         notes: '',
-        sets: []
+        sets: [{
+          orderNumber: 1,
+        }]
       });
     } else {
       selectedExercises.splice(exerciseIndex, 1);
@@ -38,12 +50,21 @@ export default function SelectExercises({
     setSelectedExercises([...selectedExercises]);
   }
 
+  function onSetExercises() {
+    const exercises = JSON.parse(JSON.stringify(selectedExercises));
+    onSelect(exercises);
+  }
+
+  if (!isOpen) {
+    return null
+  }
+
   return (
     <div className="fixed top-0 bottom-0 left-0 right-0 w-full flex justify-between flex-col overflow-hidden bg-slate-50" style={{margin: 0}}>
       <div className="w-full h-full flex-grow flex flex-col overflow-hidden">
         <NavBarHeader title={
           <div className="w-full grid grid-cols-[53px_1fr_53px] px-4 py-3">
-            <button className="font-bold text-xs leading-[14px] text-center">Regresar</button>
+            <button className="font-bold text-xs leading-[14px] text-center" onClick={onClose}>Regresar</button>
             <span className="font-medium text-sm leading-4 text-center">Agregar Ejercicio</span>
             <div className="col-span-3"></div>
           </div>
@@ -57,7 +78,7 @@ export default function SelectExercises({
         </div>
       </div>
       <div className="w-full p-4">
-        <Button className="w-full" onClick={() => onSelect(selectedExercises)}>Agregar ejercicios</Button>
+        <Button className="w-full" onClick={onSetExercises}>Agregar ejercicios</Button>
       </div>
     </div>
   );
