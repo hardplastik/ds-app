@@ -47,7 +47,7 @@ export default function ClientPage() {
         </div>
 
         <div className="pb-4 px-4 flex-none">
-          <Link href="/programs/add" className="w-full">
+          <Link href={`/clients/${params.clientId}/programs/add`} className="w-full">
               <Button className="w-full font-extralight">
                 <PlusIcon width={32} height={32} className="flex-none" />
                 <span>Crear Programa</span>

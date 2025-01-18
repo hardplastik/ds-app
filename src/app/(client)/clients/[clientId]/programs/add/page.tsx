@@ -4,7 +4,9 @@ import ProgramConfigurator from "@/components/domain/program-configurator";
 import ProgramForm, { ProgramSeed } from "@/components/domain/program-form";
 import { Button } from "@/components/ui/button";
 import { ConfigProgram } from "@/types/ProgramConfig";
+import { useQueryClient } from "@tanstack/react-query";
 import { SquarePenIcon } from "lucide-react";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 
@@ -16,11 +18,15 @@ export enum ProgramWizardStep {
 
 export default function ProgramsAddPage() {
 
+  const params = useParams<{clientId: string}>();
+
   const [program, setProgram] = useState<ProgramSeed>();
   const [programConfig, setProgramConfig] = useState<ConfigProgram>();
 
   const [isValid, setIsValid] = useState<boolean>(false);
   const [currentWizardStep, setCurrentWizardStep] = useState<ProgramWizardStep>(ProgramWizardStep.FORM);
+
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     
@@ -31,7 +37,6 @@ export default function ProgramsAddPage() {
     valid &&= Boolean(program?.weeks);
     
     setIsValid(valid);
-
   }, [program]);
 
   useEffect(() => {
@@ -43,10 +48,16 @@ export default function ProgramsAddPage() {
   useEffect(() => {
 
     if (currentWizardStep > ProgramWizardStep.CONFIGURATION) {
-      console.log(programConfig);
+      saveProgram(programConfig as ConfigProgram);
     }
 
   }, [currentWizardStep]);
+
+  function saveProgram(programConfig: ConfigProgram): void {
+    //TODO save program config
+    console.log(programConfig);
+    queryClient.invalidateQueries({queryKey: ['client-programs', params.clientId]});
+  }
 
   return (
     <div className="w-full h-full flex-grow flex flex-col bg-slate-50 justify-between overflow-auto p-4">
