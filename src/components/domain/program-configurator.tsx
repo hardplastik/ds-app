@@ -1,9 +1,8 @@
-import useStoredState from "@/hooks/use-stored-state";
 import { listExercises } from "@/services/exercises";
 import { buildProgramSchema } from "@/services/program-config-service";
 import { ConfigExercise, ConfigProgram, ConfigSession } from "@/types/ProgramConfig";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import ExerciseAndSetConfigurator from "../ui/config-exercises-and-sets";
 import SelectExercises from "../ui/select-exercises";
@@ -13,15 +12,17 @@ import ProgramWeeksBar from "./program-weeks-bar";
 
 export interface ProgramConfiguratorProps {
   program: ProgramSeed
+  onUpdate: (value: ConfigProgram) => void
 }
 
 export default function ProgramConfigurator({
-  program
+  program,
+  onUpdate
 }: ProgramConfiguratorProps) {
 
   const {token} = useAuth();
 
-  const [programConfig, setProgramConfig] = useStoredState<ConfigProgram>('program-config', buildProgramSchema(program));
+  const [programConfig, setProgramConfig] = useState<ConfigProgram>(buildProgramSchema(program));
   const [currentWeek, setCurrentWeek] = useState<number>(0);
   const [currentSession, setCurrentSession] = useState<number>(0);
 
@@ -54,9 +55,13 @@ export default function ProgramConfigurator({
     setIsConfigExercisesSetsOpen(false);
   }
 
-  function onUpdate() {
+  function onUpdateExercisesConfig() {
     setProgramConfig({...programConfig});
   }
+
+  useEffect(() => {
+    onUpdate(programConfig);
+  }, [programConfig]);
 
   return (
     <div className="w-full flex-grow space-y-3">
@@ -64,7 +69,6 @@ export default function ProgramConfigurator({
       
       <div className="w-full flex flex-row justify-between">
         <h2 className="font-semibold text-sm leading-5 text-outer-space-500">Sesiones</h2>
-        <span className="font-semibold text-sm text-slate-400">{programConfig.weeks[currentWeek].sessions.length}/{program.weeks}</span>
       </div>
       {
         programConfig.weeks[currentWeek].sessions
@@ -73,7 +77,7 @@ export default function ProgramConfigurator({
         ))
       }
       <SelectExercises isOpen={isExercisesOpen} exercisesCatalog={exercisesCatalog || []} session={getActualSession()} onClose={() => setIsExercisesOpen(false)} onSelect={onSetExercises} />
-      <ExerciseAndSetConfigurator isOpen={isConfigExercisesSetsOpen} session={getActualSession()} onClose={onConfigSession} onUpdate={onUpdate}/>
+      <ExerciseAndSetConfigurator isOpen={isConfigExercisesSetsOpen} session={getActualSession()} onClose={onConfigSession} onUpdate={onUpdateExercisesConfig}/>
     </div>
   );
 }

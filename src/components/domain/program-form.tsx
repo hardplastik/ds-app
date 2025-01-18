@@ -15,7 +15,13 @@ export interface ProgramSeed {
   sessionPerWeek: number
 }
 
-export default function ProgramForm() {
+export interface ProgramFormProps {
+  onUpdate: (seed: ProgramSeed) => void
+}
+
+export default function ProgramForm({
+  onUpdate
+}: ProgramFormProps) {
   
   const [program, setProgram] = useStoredState<ProgramSeed>('program-seed', {
     name: '',
@@ -30,11 +36,16 @@ export default function ProgramForm() {
       setDate(subDays(program.startDate, 1));
     }
 
+    onUpdate(program);
+
   }, [program]);
   
   const [date, setDate] = useState<Date>();
 
   const weekOptions: DropDownOptionProps[] = [{
+    label: `${1} semana`,
+    value: 1,
+  },{
     label: `${4} semanas`,
     value: 4,
   },{

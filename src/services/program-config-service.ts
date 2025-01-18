@@ -29,6 +29,5 @@ export function buildProgramSchema(program: ProgramSeed): ConfigProgram {
 
   }
 
-
   return configProgram;
 }
