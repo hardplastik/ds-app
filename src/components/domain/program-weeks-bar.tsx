@@ -16,12 +16,12 @@ export default function ProgramWeeksBar({
   return (
     <div className="w-full space-x-3 whitespace-nowrap overflow-auto pb-2">
       {
-        options?.map(option => (
+        options?.map((option, optionIndex) => (
           <button key={option.value} className={
             cn("py-[6px] px-3 rounded-sm border border-outer-space-500 font-semibold text-sm text-outer-space-500 leading-5",
-              option.value != value && "opacity-50 border-none"
+              optionIndex != value && "opacity-50 border-none"
             )
-          } onClick={() => onSelect && onSelect(option.value)}>
+          } onClick={() => onSelect && onSelect(optionIndex)}>
             {option.label}
           </button>
         ))

@@ -15,7 +15,7 @@ export enum ProgramWizardStep {
 
 export default function ProgramsAddPage() {
 
-  const [program] = useStoredState<ProgramSeed|null>('program', null);
+  const [program] = useStoredState<ProgramSeed|null>('program-seed', null);
   const [isValid, setIsvalid] = useState<boolean>(false);
   const [currentWizardStep, setCurrentWizardStep] = useState<ProgramWizardStep>(ProgramWizardStep.CONFIGURATION);
 
@@ -26,7 +26,7 @@ export default function ProgramsAddPage() {
     valid &&= Boolean(program?.sessionPerWeek);
     valid &&= Boolean(program?.startDate);
     valid &&= Boolean(program?.weeks);
-
+    
     setIsvalid(valid);
 
   }, [program]);
