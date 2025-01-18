@@ -63,7 +63,7 @@ export default function SelectExercises({
     <div className="fixed top-0 bottom-0 left-0 right-0 w-full flex justify-between flex-col overflow-hidden bg-slate-50" style={{margin: 0}}>
       <div className="w-full h-full flex-grow flex flex-col overflow-hidden">
         <NavBarHeader title={
-          <div className="w-full grid grid-cols-[53px_1fr_53px] px-4 py-3">
+          <div className="w-full grid grid-cols-[53px_1fr_53px]">
             <button className="font-bold text-xs leading-[14px] text-center" onClick={onClose}>Regresar</button>
             <span className="font-medium text-sm leading-4 text-center">Agregar Ejercicio</span>
             <div className="col-span-3"></div>

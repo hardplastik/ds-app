@@ -19,7 +19,7 @@ export default function ExerciseAndSetConfigurator({session, isOpen, onUpdate, o
   return (
     <div className="fixed top-0 bottom-0 left-0 right-0 w-full flex justify-between flex-col overflow-hidden bg-slate-50" style={{margin: 0}}>
         <NavBarHeader title={
-          <div className="w-full grid grid-cols-[53px_1fr_53px] px-4 py-3">
+          <div className="w-full grid grid-cols-[53px_1fr_53px]">
             <button className="font-bold text-xs leading-[14px] text-center" onClick={onClose}>Cerrar</button>
             <span className="font-medium text-sm leading-4 text-center">Semana {session.weekNumber} | Sessión {session.weekDay}</span>
             <div className="col-span-3"></div>
