@@ -36,6 +36,12 @@ export default function ProgramsAddPage() {
 
   useEffect(() => {
 
+    //TODO: Valid program config
+
+  }, [programConfig])
+
+  useEffect(() => {
+
     if (currentWizardStep > ProgramWizardStep.CONFIGURATION) {
       console.log(programConfig);
     }
