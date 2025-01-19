@@ -33,7 +33,7 @@ export interface UserProgramExercise extends Exercise {
 
 export interface UserProgramSet extends ConfigSet {
   id: string;
-  resp?: number;
+  reps?: number;
   weight?: number;
   isCompleted: boolean
 }
