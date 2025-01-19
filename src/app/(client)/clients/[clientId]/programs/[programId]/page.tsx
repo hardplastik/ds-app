@@ -49,7 +49,6 @@ export default function ProgramPage() {
             userProgram?.sessions
               .sort((a, b) => a.weekNumber - b.weekNumber)
               .filter(s => s.weekNumber - 1 == currentWeek)
-              .filter(session => session.weekDay - 1 == currentSession)
               .map(session => (
                 <UserSessionCard key={session.id} session={session}/>
               ))
