@@ -37,10 +37,23 @@ export default function ProgramsAddPage():React.ReactElement {
   }, [program]);
 
   useEffect(() => {
+    const isValidConfig = programConfig?.sessions.every((session) => {
+      
+      if (session.exercises.length === 0) {
+        return false;
+      }
 
-    //TODO: Valid program config
+      const isValidSession = session.exercises.every((exercise) =>
+        exercise.sets.every(
+          (set) => set.targetReps !== undefined && set.rpe !== undefined
+        )
+      );
 
-  }, [programConfig])
+      return isValidSession;
+    });
+
+    setIsValid(isValidConfig ?? false);
+  }, [programConfig]);
 
   useEffect(() => {
 
@@ -51,7 +64,6 @@ export default function ProgramsAddPage():React.ReactElement {
   }, [currentWizardStep]);
 
   function saveProgram(programConfig: ConfigProgram): void {
-    //TODO save program config
     queryClient.invalidateQueries({queryKey: ['client-programs', params.clientId]});
     saveProgramUser(programConfig, token);
   }

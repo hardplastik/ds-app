@@ -82,12 +82,12 @@ export default function ProgramConfigurator({
       {
         programConfig.sessions
           .map((session, index) => ({ ...session, originalIndex: index }))
-          .filter((session) => session.weekNumber === currentWeek + 1)
+          .filter((session) => session.weekNumber === currentWeek + 1) // Filtra las sesiones por la semana actual
           .map((session) => (
             <ProgramSessionConfig 
               key={`${session.weekNumber}-${session.weekDay}`} 
               session={session} 
-              onAddExercises={() => onOpenSelectExercises(session.originalIndex)}
+              onAddExercises={() => onOpenSelectExercises(session.originalIndex)} // Usa el índice original
             />
           ))
       }
