@@ -39,7 +39,7 @@ export default function ClientPage() {
         <div className="w-full h-full flex-grow flex flex-col gap-y-4 items-center pt-4 px-4 overflow-hidden">
           <ClientInfo client={client} />
           <h2 className="w-full text-xl font-bold text-slate-800 text-left">Programas</h2>
-          <div className="w-full space-y-2 h-full flex-grow overflow-auto pb-4">
+          <div className="w-full h-full flex-grow flex flex-col gap-y-2 overflow-auto pb-4">
             {
               programs?.map(program => (<UserProgramCard key={program.id} program={program} />))
             }

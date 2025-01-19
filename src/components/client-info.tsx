@@ -15,7 +15,7 @@ export default function ClientInfo({client}: ClientInfoProps) {
   }
   
   return (
-    <Card className="w-full bg-slate-50 border border-slate-800 shadow-none border-none">
+    <Card className="w-full bg-slate-100 border border-slate-800 shadow-none border-none">
         <CardHeader className="flex flex-row gap-x-4 items-center">
           <Avatar className={`h-12 w-12`}>
             <AvatarFallback className="font-bold text-base text-white bg-primary">
