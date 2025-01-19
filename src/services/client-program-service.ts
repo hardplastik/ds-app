@@ -1,6 +1,5 @@
-import { CompletExerciseSet } from "@/app/(client)/clients/[clientId]/programs/[programId]/page";
+import { CompleteExerciseSet } from "@/components/domain/user-session-card";
 import { UserProgram } from "@/types/UserProgram";
-import { assert } from "console";
 
 export async function getClientProgram(programId: string, token: string | null): Promise<UserProgram> {
 
@@ -17,7 +16,7 @@ export async function getClientProgram(programId: string, token: string | null):
     return response;
 }
 
-export async function completeExercise(setId: string, command: CompletExerciseSet, token: string | null): Promise<void> {
+export async function completeExercise(setId: string, command: CompleteExerciseSet, token: string | null): Promise<void> {
 
   if (!token) {
     throw new Error('Waiting on token');
