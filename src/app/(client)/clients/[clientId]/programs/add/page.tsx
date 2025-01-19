@@ -63,9 +63,9 @@ export default function ProgramsAddPage():React.ReactElement {
 
   }, [currentWizardStep]);
 
-  function saveProgram(programConfig: ConfigProgram): void {
-    queryClient.invalidateQueries({queryKey: ['client-programs', params.clientId]});
-    saveProgramUser(programConfig, token);
+  async function saveProgram(programConfig: ConfigProgram): Promise<void> {
+    await saveProgramUser(programConfig, token);
+    await queryClient.invalidateQueries({queryKey: ['client-programs', params.clientId]});
   }
 
   return (

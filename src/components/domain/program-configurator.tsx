@@ -49,7 +49,6 @@ export default function ProgramConfigurator({
   }
 
   function onOpenSelectExercises(sessionIndex: number) {
-    console.log(sessionIndex)
     setCurrentSession(sessionIndex);
     setIsExercisesOpen(true);
   }

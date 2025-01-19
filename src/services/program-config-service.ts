@@ -32,9 +32,7 @@ export async function saveProgramUser(configProgram: ConfigProgram, token: strin
     throw new Error('Waiting on token');
   }
 
-  console.log(configProgram)
-
-  const response = await (await fetch(`${process.env.NEXT_PUBLIC_API_URL}/programs`, {
+  await (await fetch(`${process.env.NEXT_PUBLIC_API_URL}/programs`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -42,7 +40,4 @@ export async function saveProgramUser(configProgram: ConfigProgram, token: strin
       },
       body: JSON.stringify(configProgram)
   }))
-
-  console.log(response)
-
 }
