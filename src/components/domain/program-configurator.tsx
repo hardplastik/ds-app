@@ -49,6 +49,7 @@ export default function ProgramConfigurator({
   }
 
   function onOpenSelectExercises(sessionIndex: number) {
+    console.log(sessionIndex)
     setCurrentSession(sessionIndex);
     setIsExercisesOpen(true);
   }
@@ -67,18 +68,45 @@ export default function ProgramConfigurator({
 
   return (
     <div className="w-full flex-grow space-y-3">
-      <ProgramWeeksBar value={currentWeek} onSelect={(value) => setCurrentWeek(value as number)} options={Array.from({ length: programConfig.sessions.length / program.sessionPerWeek }, (_, i) => ({value: i + 1, label: `Semana ${i + 1}`}))}/>
+      
+      <ProgramWeeksBar 
+        value={currentWeek} 
+        onSelect={(value) => setCurrentWeek(value as number)} 
+        options={Array.from({ length: programConfig.sessions.length / program.sessionPerWeek }, (_, i) => ({value: i + 1, label: `Semana ${i + 1}`}))}
+      />
       
       <div className="w-full flex flex-row justify-between">
         <h2 className="font-semibold text-sm leading-5 text-outer-space-500">Sesiones</h2>
       </div>
+
       {
         programConfig.sessions
-        .map((session, sessionIndex) => (
-          <ProgramSessionConfig key={`${session.weekNumber}-${session.weekDay}`} session={session} onAddExercises={() => onOpenSelectExercises(sessionIndex)}/>))
+          .map((session, index) => ({ ...session, originalIndex: index }))
+          .filter((session) => session.weekNumber === currentWeek + 1)
+          .map((session) => (
+            <ProgramSessionConfig 
+              key={`${session.weekNumber}-${session.weekDay}`} 
+              session={session} 
+              onAddExercises={() => onOpenSelectExercises(session.originalIndex)}
+            />
+          ))
       }
-      <SelectExercises isOpen={isExercisesOpen} exercisesCatalog={exercisesCatalog || []} session={getActualSession()} onClose={() => setIsExercisesOpen(false)} onSelect={onSetExercises} />
-      <ExerciseAndSetConfigurator isOpen={isConfigExercisesSetsOpen} session={getActualSession()} onClose={onConfigSession} onUpdate={onUpdateExercisesConfig}/>
+
+
+      <SelectExercises 
+        isOpen={isExercisesOpen} 
+        exercisesCatalog={exercisesCatalog || []} 
+        session={getActualSession()} 
+        onClose={() => setIsExercisesOpen(false)} 
+        onSelect={onSetExercises} 
+      />
+
+      <ExerciseAndSetConfigurator 
+        isOpen={isConfigExercisesSetsOpen} 
+        session={getActualSession()} 
+        onClose={onConfigSession} onUpdate={onUpdateExercisesConfig}
+      />
+
     </div>
   );
 }
