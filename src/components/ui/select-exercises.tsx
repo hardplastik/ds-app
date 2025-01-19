@@ -4,6 +4,7 @@ import NavBarHeader from "./nav-bar-header";
 import { Button } from "./button";
 import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import { SearchIcon } from "lucide-react";
 
 export interface SelectExercisesProps {
   session: ConfigSession;
@@ -22,7 +23,8 @@ export default function SelectExercises({
 }: SelectExercisesProps) {
 
   const [selectedExercises, setSelectedExercises] = useState<ConfigExercise[]>([]);
-
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  
   useEffect(() => {
     const exercises = JSON.parse(JSON.stringify(session.exercises));
     setSelectedExercises(exercises);
@@ -70,8 +72,14 @@ export default function SelectExercises({
           </div>
         }/>
         <div className="w-full h-full flex-grow space-y-2 p-4 overflow-auto">
+        <div className="w-full flex flex-row items-center gap-x-2 text-base text-slate-800 px-3 border border-slate-300 h-10 rounded-md">
+            <SearchIcon width={20} height={20} className="text-slate-500" />
+            <input className="w-full h-full p-0 flex-grow outline-none bg-transparent border-none" value={searchTerm} onChange={(e) => setSearchTerm(e.currentTarget.value)}/>
+        </div>
           {
-            exercisesCatalog.map(exercise => (
+            exercisesCatalog
+            .filter(exercise => searchTerm ? exercise.name.toLowerCase().includes(searchTerm.toLowerCase()) : true)
+            .map(exercise => (
               <SelectExerciseItem key={exercise.id} exercise={exercise} selectNumber={selectedExercises.find(e=> e.id == exercise.id)?.orderNumber} onSelect={onSelectExercise} />
             ))
           }
