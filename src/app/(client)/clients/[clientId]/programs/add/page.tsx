@@ -22,6 +22,7 @@ export default function ProgramsAddPage():React.ReactElement {
 
   const [isValid, setIsValid] = useState<boolean>(false);
   const [currentWizardStep, setCurrentWizardStep] = useState<ProgramWizardStep>(ProgramWizardStep.FORM);
+  const [isExercisesOpen, setIsExercisesOpen] = useState<boolean>(false);
 
   const queryClient = useQueryClient();
 
@@ -77,7 +78,11 @@ export default function ProgramsAddPage():React.ReactElement {
         {
           currentWizardStep == ProgramWizardStep.CONFIGURATION 
           && program != null
-          && <ProgramConfigurator program={program} onUpdate={setProgramConfig}/>
+          && <ProgramConfigurator 
+                program={program} 
+                onUpdate={setProgramConfig} 
+                isExercisesOpen={isExercisesOpen}
+                setIsExercisesOpen={setIsExercisesOpen}/>
         }
         {
           currentWizardStep == ProgramWizardStep.SAVING
@@ -86,7 +91,8 @@ export default function ProgramsAddPage():React.ReactElement {
               <h1 className="font-medium text-4xl text-slate-400 text-center">Creando programa, espera un momento</h1>
             </div>
         }
-      <Button className="w-full" disabled={!isValid} onClick={() => setCurrentWizardStep(currentWizardStep + 1)}>Continuar</Button>
+      {!isExercisesOpen && 
+        <Button className="w-full" disabled={!isValid} onClick={() => setCurrentWizardStep(currentWizardStep + 1)}>Continuar</Button>}
     </div>
   );
 }

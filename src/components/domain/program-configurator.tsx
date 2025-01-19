@@ -14,11 +14,15 @@ import { useParams } from "next/navigation";
 export interface ProgramConfiguratorProps {
   program: ProgramSeed
   onUpdate: (value: ConfigProgram) => void
+  isExercisesOpen: boolean; // Nueva prop
+  setIsExercisesOpen: (value: boolean) => void; // Nueva prop
 }
 
 export default function ProgramConfigurator({
   program,
-  onUpdate
+  onUpdate,
+  isExercisesOpen,
+  setIsExercisesOpen
 }: ProgramConfiguratorProps) {
 
   const {token} = useAuth();
@@ -28,7 +32,6 @@ export default function ProgramConfigurator({
   const [currentWeek, setCurrentWeek] = useState<number>(0);
   const [currentSession, setCurrentSession] = useState<number>(0);
 
-  const [isExercisesOpen, setIsExercisesOpen] = useState<boolean>(false);
   const [isConfigExercisesSetsOpen, setIsConfigExercisesSetsOpen] = useState<boolean>(false);
 
   const {data: exercisesCatalog} = useQuery({
@@ -81,16 +84,15 @@ export default function ProgramConfigurator({
       {
         programConfig.sessions
           .map((session, index) => ({ ...session, originalIndex: index }))
-          .filter((session) => session.weekNumber === currentWeek + 1) // Filtra las sesiones por la semana actual
+          .filter((session) => session.weekNumber === currentWeek + 1)
           .map((session) => (
             <ProgramSessionConfig 
               key={`${session.weekNumber}-${session.weekDay}`} 
               session={session} 
-              onAddExercises={() => onOpenSelectExercises(session.originalIndex)} // Usa el índice original
+              onAddExercises={() => onOpenSelectExercises(session.originalIndex)}
             />
           ))
       }
-
 
       <SelectExercises 
         isOpen={isExercisesOpen} 

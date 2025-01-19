@@ -25,7 +25,6 @@ export default function ProgramSessionConfig({session, onAddExercises}: ProgramS
         : null
       }
       
-
       <Button variant={'outline'} className="w-full font-medium text-xs" onClick={onAddExercises}>
         <PlusIcon width={16} height={16} />
         Agregar Ejercicio
