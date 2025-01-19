@@ -9,6 +9,7 @@ import SelectExercises from "../ui/select-exercises";
 import { ProgramSeed } from "./program-form";
 import ProgramSessionConfig from "./program-session-config";
 import ProgramWeeksBar from "./program-weeks-bar";
+import { useParams } from "next/navigation";
 
 export interface ProgramConfiguratorProps {
   program: ProgramSeed
@@ -21,8 +22,9 @@ export default function ProgramConfigurator({
 }: ProgramConfiguratorProps) {
 
   const {token} = useAuth();
+  const params = useParams<{clientId: string}>();
 
-  const [programConfig, setProgramConfig] = useState<ConfigProgram>(buildProgramSchema(program));
+  const [programConfig, setProgramConfig] = useState<ConfigProgram>(buildProgramSchema(program, params.clientId));
   const [currentWeek, setCurrentWeek] = useState<number>(0);
   const [currentSession, setCurrentSession] = useState<number>(0);
 
@@ -35,7 +37,7 @@ export default function ProgramConfigurator({
   })
 
   function getActualSession(): ConfigSession {
-    return programConfig.weeks[currentWeek].sessions[currentSession];
+    return programConfig.sessions[currentSession];
   }
 
   function onSetExercises(exercises: ConfigExercise[]) {
@@ -65,16 +67,15 @@ export default function ProgramConfigurator({
 
   return (
     <div className="w-full flex-grow space-y-3">
-      <ProgramWeeksBar value={currentWeek} onSelect={(value) => setCurrentWeek(value as number)} options={programConfig.weeks.map(week => ({value: week.weekNumber, label: `Semana ${week.weekNumber}`}))}/>
+      <ProgramWeeksBar value={currentWeek} onSelect={(value) => setCurrentWeek(value as number)} options={Array.from({ length: programConfig.sessions.length / program.sessionPerWeek }, (_, i) => ({value: i + 1, label: `Semana ${i + 1}`}))}/>
       
       <div className="w-full flex flex-row justify-between">
         <h2 className="font-semibold text-sm leading-5 text-outer-space-500">Sesiones</h2>
       </div>
       {
-        programConfig.weeks[currentWeek].sessions
+        programConfig.sessions
         .map((session, sessionIndex) => (
-          <ProgramSessionConfig key={session.weekDay} session={session} onAddExercises={() => onOpenSelectExercises(sessionIndex)} /> 
-        ))
+          <ProgramSessionConfig key={`${session.weekNumber}-${session.weekDay}`} session={session} onAddExercises={() => onOpenSelectExercises(sessionIndex)}/>))
       }
       <SelectExercises isOpen={isExercisesOpen} exercisesCatalog={exercisesCatalog || []} session={getActualSession()} onClose={() => setIsExercisesOpen(false)} onSelect={onSetExercises} />
       <ExerciseAndSetConfigurator isOpen={isConfigExercisesSetsOpen} session={getActualSession()} onClose={onConfigSession} onUpdate={onUpdateExercisesConfig}/>

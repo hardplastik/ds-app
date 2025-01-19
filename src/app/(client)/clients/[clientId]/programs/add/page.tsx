@@ -1,24 +1,21 @@
 "use client";
 
+import { useAuth } from "@/components/contexts/AuthContext";
 import ProgramConfigurator from "@/components/domain/program-configurator";
 import ProgramForm, { ProgramSeed } from "@/components/domain/program-form";
 import { Button } from "@/components/ui/button";
+import { saveProgramUser } from "@/services/program-config-service";
 import { ConfigProgram } from "@/types/ProgramConfig";
+import { ProgramWizardStep } from "@/types/ProgramWizardStep";
 import { useQueryClient } from "@tanstack/react-query";
 import { SquarePenIcon } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-
-export enum ProgramWizardStep {
-  FORM = 1,
-  CONFIGURATION = 2,
-  SAVING = 3
-}
-
-export default function ProgramsAddPage() {
+export default function ProgramsAddPage():React.ReactElement {
 
   const params = useParams<{clientId: string}>();
+  const {token} = useAuth();
 
   const [program, setProgram] = useState<ProgramSeed>();
   const [programConfig, setProgramConfig] = useState<ConfigProgram>();
@@ -55,8 +52,8 @@ export default function ProgramsAddPage() {
 
   function saveProgram(programConfig: ConfigProgram): void {
     //TODO save program config
-    console.log(programConfig);
     queryClient.invalidateQueries({queryKey: ['client-programs', params.clientId]});
+    saveProgramUser(programConfig, token);
   }
 
   return (

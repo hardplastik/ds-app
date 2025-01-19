@@ -4,27 +4,23 @@ export enum WeightUnits {
 }
 
 export interface ConfigProgram {
-  weeks: ConfigWeek[]
+  accountId: string;
   name: string;
-}
-
-export interface ConfigWeek {
-  weekNumber: number;
   sessions: ConfigSession[];
 }
 
 export interface ConfigSession {
   weekDay: number;
   weekNumber: number;
-  exercises: ConfigExercise[]; 
+  exercises: ConfigExercise[];
 }
 
 export interface ConfigExercise {
   id: string;
   name: string;
-  orderNumber: number
+  orderNumber: number;
   notes: string;
-  sets: ConfigSet[]
+  sets: ConfigSet[];
 }
 
 export interface ConfigSet {
