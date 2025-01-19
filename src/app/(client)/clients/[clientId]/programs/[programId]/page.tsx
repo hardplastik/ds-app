@@ -2,12 +2,14 @@
 
 import { useAuth } from "@/components/contexts/AuthContext";
 import ProgramWeeksBar from "@/components/domain/program-weeks-bar";
+import { Checkbox } from "@/components/ui/Checkbox";
 import NavBarHeader from "@/components/ui/nav-bar-header";
-import { getClientProgram } from "@/services/client-program-service";
+import { completeExercise, getClientProgram } from "@/services/client-program-service";
 import { SimpleRecord } from "@/types/SimpleRecord";
 import { UserProgramExercise, UserProgramSession, UserProgramSet } from "@/types/UserProgram";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
+import { CheckedState } from "@radix-ui/react-checkbox";
 import { useState } from "react";
 
 export default function ProgramPage() {
@@ -95,7 +97,7 @@ export function UserExerciseCard({exercise}: UserExerciseCardProps) {
           exercise.sets
           .sort((a,b) => a.orderNumber - b.orderNumber)
           .map(set => (
-            <UserSetCard key={set.id} set={set}/>
+            <UserSetCard key={set.id} set={set} />
           ))
         }
       </div>
@@ -107,7 +109,47 @@ export interface UserSetCardProps {
   set: UserProgramSet
 }
 
+export interface CompletExerciseSet {
+  reps: number,
+  weight: number,
+  rpe: number,
+  isCompleted: boolean
+}
+
 export function UserSetCard({set}: UserSetCardProps) {
+
+  const {token} = useAuth();
+  const [isChecked, setIsChecked] = useState(set.isCompleted);
+  const [inputReps, setInputReps] = useState<number>(set.reps || 0);
+  const [inputWeight, setInputWeight] = useState<number>(set.weight || 0);
+
+  const handleCheckboxChange = async (checked: CheckedState) => {
+    setIsChecked(checked === true);
+
+    const command: CompletExerciseSet = {
+      reps: inputReps,
+      weight: inputWeight,
+      rpe: set.rpe || 0,
+      isCompleted: checked === true,
+    };
+
+    console.log(command);
+
+    try {
+      await completeExercise(set.id, command, token);
+    } catch (error) {
+      console.error("Error al completar el ejercicio:", error);
+    }
+  };
+
+  const handleRepsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputReps(Number(event.target.value));
+  };
+
+  const handleWeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputWeight(Number(event.target.value));
+  };
+
   return (
     <div>
       <div className="grid grid-cols-[0.75fr_0.5fr] justify-between gap-x-8">
@@ -133,15 +175,25 @@ export function UserSetCard({set}: UserSetCardProps) {
         <div className="grid grid-cols-3">
           <div className="flex flex-col items-center">
             <span className="font-bold text-xs leading-4 text-slate-500">Peso</span>
-            <span className="font-bold text-xs leading-5 text-slate-800">{set.weight}</span>
+            <input
+              type="number"
+              value={inputWeight}
+              onChange={handleWeightChange}
+              className="text-center border rounded px-1 text-xs w-7 h-7 border-slate-500"
+            />
           </div>
           <div className="flex flex-col items-center">
             <span className="font-bold text-xs leading-4 text-slate-500">Reps</span>
-            <span className="font-bold text-xs leading-5 text-slate-800">{set.reps}</span>
+            <input
+              type="number"
+              value={inputReps}
+              onChange={handleRepsChange}
+              className="text-center border rounded px-1 text-xs w-7 h-7 border-slate-500"
+            />
           </div>
           <div className="flex flex-col items-center gap-y-1">
             <span className="font-bold text-xs leading-4 text-slate-500">Comp</span>
-            <input type="checkbox" name="" id="" />
+            <Checkbox checked={isChecked} onCheckedChange={(checked) => handleCheckboxChange(checked as boolean)} />
           </div>
         </div>
       </div>
