@@ -113,7 +113,7 @@ export function UserSetCard({set, onUpdate}: UserSetCardProps) {
             <span className="font-bold text-xs leading-5 text-slate-500">{set.orderNumber}</span>
           </div>
           <div className="flex flex-col items-center gap-y-1">
-            <span className="font-medium text-xs leading-4 text-slate-500">Peso</span>
+            <span className="font-medium text-xs leading-4 text-slate-500">Carga</span>
             <span className="font-bold text-xs leading-5 text-slate-500">{set.targetWeight}</span>
           </div>
           <div className="flex flex-col items-center gap-y-1">
@@ -128,7 +128,7 @@ export function UserSetCard({set, onUpdate}: UserSetCardProps) {
 
         <div className="grid grid-cols-3 gap-x-4">
           <div className="flex flex-col items-center gap-y-1">
-            <span className="font-medium text-xs leading-4 text-slate-500">Peso</span>
+            <span className="font-medium text-xs leading-4 text-slate-500">Carga</span>
             <input type="text" placeholder="-" className="w-11 bg-transparent text-xs leading-5 text-center border border-slate-500 rounded-sm" 
               value={set.weight || ''} inputMode="numeric" onChange={(e) => onSetWeight(e.currentTarget.value)}/>
           </div>

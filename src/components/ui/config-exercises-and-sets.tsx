@@ -156,7 +156,7 @@ export function SetConfigurator({set, disabled, onUpdate, onCopySet, isLastSet, 
         </div>
 
         <div className="flex flex-col gap-y-1 items-center">
-          <span>Peso</span>
+          <span>Carga</span>
           <input type="text" placeholder="-" disabled={disabled} value={set.targetWeight || ''} className="w-11 text-center rounded-sm py-1 px-3 border border-slate-500 bg-transparent disabled:border-none" inputMode="numeric" onChange={(e) => onWeightChange(e.currentTarget.value)}/>
         </div>
 
