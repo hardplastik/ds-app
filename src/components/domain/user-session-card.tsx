@@ -35,7 +35,7 @@ export interface UserExerciseCardProps {
 
 export function UserExerciseCard({exercise, onUpdate}: UserExerciseCardProps) {
   return (
-    <div className="w-full p-0 py-2 border-b border-slate-300/80 [&:last-of-type]:border-none">
+    <div className="w-full p-0 py-3">
       <div className="space-x-2">
         <span className="font-medium text-xs leading-5 text-slate-500">{exercise.orderNumber}</span>
         <span className="font-medium text-xs leading-5 text-slate-800">{exercise.name}</span>

@@ -2,6 +2,7 @@
 
 import { useAuth } from "@/components/contexts/AuthContext";
 import ProgramWeeksBar from "@/components/domain/program-weeks-bar";
+import ProgramSessionsBar from "@/components/domain/program-sessions-bar";
 import { UserSessionCard } from "@/components/domain/user-session-card";
 import NavBarHeader from "@/components/ui/nav-bar-header";
 import { getClientProgram } from "@/services/client-program-service";
@@ -20,6 +21,7 @@ export default function ProgramPage() {
   const [userProgram, setUserProgram] = useState<UserProgram>();
 
   const [currentWeek, setCurrentWeek] = useState<number>(0);
+  const [currentSession, setCurrentSession] = useState<number>(0);
 
   const {data: userProgramData} = useQuery({
     queryKey: ['client-programs-details', params.clientId, params.programId],
@@ -44,6 +46,16 @@ export default function ProgramPage() {
       } as SimpleRecord))
   }
 
+  function getProgramSessionsByWeek() {
+    return userProgram?.sessions
+      .filter(session => session.weekNumber - 1 == currentWeek)
+      .sort((a, b) => a.weekDay - b.weekDay)
+      .map(session => ({
+        value: session.weekDay,
+        label: `Sesión ${session.weekDay}`
+      } as SimpleRecord))
+  }
+
   function onUpdate() {
     if (userProgram) {
       setUserProgram(JSON.parse(JSON.stringify(userProgram)));
@@ -60,11 +72,13 @@ export default function ProgramPage() {
               </div>
             }/>
       <div className="w-full flex-grow flex flex-col overflow-auto border p-4 gap-y-2">
-          <ProgramWeeksBar value={currentWeek} options={getProgramWeeks()} onSelect={(value) => setCurrentWeek(value as number)} />
+      <ProgramWeeksBar value={currentWeek} options={getProgramWeeks()} onSelect={(value) => setCurrentWeek(value as number)} />
+      <ProgramSessionsBar value={currentSession} options={getProgramSessionsByWeek()} onSelect={(value) => setCurrentSession(value as number)} />
+
           {
             userProgram?.sessions
               .sort((a, b) => a.weekNumber - b.weekNumber)
-              .filter(s => s.weekNumber - 1 == currentWeek)
+              .filter(s => s.weekNumber - 1 == currentWeek && s.weekDay - 1 == currentSession )
               .map(session => (
                 <UserSessionCard key={session.id} session={session} onUpdate={onUpdate}/>
               ))
