@@ -20,27 +20,17 @@ export default function RootLayout({
 }>) {
 
   const [client] = useState(new QueryClient())
-
-  document.addEventListener("gesturestart", function (e) {
-    e.preventDefault();
-      document.body.style.zoom = '0.99';
-  });
   
-  document.addEventListener("gesturechange", function (e) {
-    e.preventDefault();
-  
-    document.body.style.zoom = '0.99';
-  });
-  document.addEventListener("gestureend", function (e) {
-      e.preventDefault();
-      document.body.style.zoom = '1';
-  });
-
   return (
     <html lang="en">
       <title>Athlos One</title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       <meta name="HandheldFriendly" content="true" />
+      <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+      <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+      <link rel="shortcut icon" href="/favicon.ico" />
+      <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+      <link rel="manifest" href="/site.webmanifest" />
       <body
         className={`${inter.variable} antialiased`}
       >
