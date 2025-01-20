@@ -7,9 +7,10 @@ import { Button } from "@/components/ui/button";
 import { saveProgramUser } from "@/services/program-config-service";
 import { ConfigProgram } from "@/types/ProgramConfig";
 import { ProgramWizardStep } from "@/types/ProgramWizardStep";
+import { UserProgram } from "@/types/UserProgram";
 import { useQueryClient } from "@tanstack/react-query";
 import { SquarePenIcon } from "lucide-react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 export default function ProgramsAddPage():React.ReactElement {
@@ -25,6 +26,8 @@ export default function ProgramsAddPage():React.ReactElement {
   const [isExercisesOpen, setIsExercisesOpen] = useState<boolean>(false);
 
   const queryClient = useQueryClient();
+
+  const router = useRouter();
 
   useEffect(() => {
     
@@ -65,8 +68,11 @@ export default function ProgramsAddPage():React.ReactElement {
   }, [currentWizardStep]);
 
   async function saveProgram(programConfig: ConfigProgram): Promise<void> {
-    await saveProgramUser(programConfig, token);
+    const response: UserProgram = await saveProgramUser(programConfig, token);
     await queryClient.invalidateQueries({queryKey: ['client-programs', params.clientId]});
+    setCurrentWizardStep(ProgramWizardStep.FORM);
+    setProgram(undefined);
+    router.replace(`/clients/${params.clientId}/programs/${response.id}`);
   }
 
   return (

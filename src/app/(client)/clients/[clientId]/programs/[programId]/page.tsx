@@ -6,9 +6,10 @@ import { UserSessionCard } from "@/components/domain/user-session-card";
 import NavBarHeader from "@/components/ui/nav-bar-header";
 import { getClientProgram } from "@/services/client-program-service";
 import { SimpleRecord } from "@/types/SimpleRecord";
+import { UserProgram } from "@/types/UserProgram";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function ProgramPage() {
 
@@ -16,12 +17,22 @@ export default function ProgramPage() {
   const params = useParams<{clientId: string, programId: string}>();
   const {token} = useAuth();
 
+  const [userProgram, setUserProgram] = useState<UserProgram>();
+
   const [currentWeek, setCurrentWeek] = useState<number>(0);
 
-  const {data: userProgram} = useQuery({
+  const {data: userProgramData} = useQuery({
     queryKey: ['client-programs-details', params.clientId, params.programId],
     queryFn: () => getClientProgram(params.programId, token)
   });
+
+  useEffect(() => {
+
+    if (userProgramData) {
+      setUserProgram({...userProgramData});
+    }
+
+  }, [userProgramData]);
 
   function getProgramWeeks() {
     return userProgram?.sessions
@@ -33,8 +44,14 @@ export default function ProgramPage() {
       } as SimpleRecord))
   }
 
+  function onUpdate() {
+    if (userProgram) {
+      setUserProgram(JSON.parse(JSON.stringify(userProgram)));
+    }
+  }
+
   return (
-    <section className="w-full h-dvh flex flex-col overflow-hidden">
+    <section className="w-full h-dvh grid grid-rows-[48px_1fr] overflow-hidden">
       <NavBarHeader title={
               <div className="w-full grid grid-cols-[53px_1fr_53px]">
                 <button className="font-bold text-xs" onClick={() => router.replace(`/clients/${params.clientId}`)}>Regresar</button>
@@ -49,7 +66,7 @@ export default function ProgramPage() {
               .sort((a, b) => a.weekNumber - b.weekNumber)
               .filter(s => s.weekNumber - 1 == currentWeek)
               .map(session => (
-                <UserSessionCard key={session.id} session={session}/>
+                <UserSessionCard key={session.id} session={session} onUpdate={onUpdate}/>
               ))
           }
       </div>

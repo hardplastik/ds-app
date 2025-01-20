@@ -1,15 +1,17 @@
-import { UserProgramExercise, UserProgramSession, UserProgramSet } from "@/types/UserProgram"
-import { Checkbox } from "../ui/Checkbox"
-import { useAuth } from "../contexts/AuthContext"
-import { useState } from "react"
-import { CheckedState } from "@radix-ui/react-checkbox"
 import { completeExercise } from "@/services/client-program-service"
+import { validValue } from "@/services/utils"
+import { UserProgramExercise, UserProgramSession, UserProgramSet } from "@/types/UserProgram"
+import { useEffect } from "react"
+import { useAuth } from "../contexts/AuthContext"
+import { Checkbox } from "../ui/Checkbox"
+import { useDebounce } from "@/hooks/use-debounce"
 
 export interface UserSessionProps {
-  session: UserProgramSession
+  session: UserProgramSession,
+  onUpdate: () => void
 }
 
-export function UserSessionCard({session}: UserSessionProps) {
+export function UserSessionCard({session, onUpdate}: UserSessionProps) {
   return (
     <div  className="bg-slate-200 rounded-md p-3">
       <span className="font-medium text-xs leading-[14px] text-slate-800">Sesión {session.weekDay}</span>
@@ -18,7 +20,7 @@ export function UserSessionCard({session}: UserSessionProps) {
           session.exercises
             .sort((a, b) => a.orderNumber - b.orderNumber)
             .map(exercise => (
-              <UserExerciseCard key={exercise.id} exercise={exercise} />
+              <UserExerciseCard key={exercise.id} exercise={exercise} onUpdate={onUpdate} />
             ))
         }
       </div>
@@ -27,22 +29,27 @@ export function UserSessionCard({session}: UserSessionProps) {
 }
 
 export interface UserExerciseCardProps {
-  exercise: UserProgramExercise
+  exercise: UserProgramExercise,
+  onUpdate: () => void
 }
 
-export function UserExerciseCard({exercise}: UserExerciseCardProps) {
+export function UserExerciseCard({exercise, onUpdate}: UserExerciseCardProps) {
   return (
-    <div className="rounded-md w-full p-0 border-b border-slate-300/80 [&:last-of-type]:border-none">
+    <div className="w-full p-0 py-2 border-b border-slate-300/80 [&:last-of-type]:border-none">
       <div className="space-x-2">
         <span className="font-medium text-xs leading-5 text-slate-500">{exercise.orderNumber}</span>
         <span className="font-medium text-xs leading-5 text-slate-800">{exercise.name}</span>
       </div>
-      <div>
+      <div className="grid grid-cols-[0.75fr_0.5fr] justify-between text-center gap-x-8 py-2">
+        <span className="font-medium text-xs text-slate-500">Objetivos</span>
+        <span className="font-medium text-xs text-slate-500">Alcanzado</span>
+      </div>
+      <div className="space-y-3">
         {
           exercise.sets
           .sort((a,b) => a.orderNumber - b.orderNumber)
           .map(set => (
-            <UserSetCard key={set.id} set={set} />
+            <UserSetCard key={set.id} set={set} onUpdate={onUpdate} />
           ))
         }
       </div>
@@ -51,7 +58,8 @@ export function UserExerciseCard({exercise}: UserExerciseCardProps) {
 }
 
 export interface UserSetCardProps {
-  set: UserProgramSet
+  set: UserProgramSet,
+  onUpdate: () => void
 }
 
 export interface CompleteExerciseSet {
@@ -61,81 +69,73 @@ export interface CompleteExerciseSet {
   isCompleted: boolean
 }
 
-export function UserSetCard({set}: UserSetCardProps) {
+export function UserSetCard({set, onUpdate}: UserSetCardProps) {
 
   const {token} = useAuth();
-  const [isChecked, setIsChecked] = useState(set.isCompleted);
-  const [inputReps, setInputReps] = useState<number>(set.reps || 0);
-  const [inputWeight, setInputWeight] = useState<number>(set.weight || 0);
 
-  const handleCheckboxChange = async (checked: CheckedState) => {
-    setIsChecked(checked === true);
+  function onSetComplete(value: boolean) {
+    set.isCompleted = value;
+    onUpdate();
+  }
 
+  function onSetReps(value: string) {
+    set.reps = validValue(value);
+    onUpdate();
+  }
+
+  function onSetWeight(value: string) {
+    set.weight = validValue(value);
+    onUpdate();
+  }
+
+  function saveSet() {
     const command: CompleteExerciseSet = {
-      reps: inputReps,
-      weight: inputWeight,
+      reps: set.reps || 0,
+      weight: set.weight || 0,
       rpe: set.rpe || 0,
-      isCompleted: checked === true,
+      isCompleted: set.isCompleted
     };
-    try {
-      await completeExercise(set.id, command, token);
-    } catch (error) {
-      console.error("Error al completar el ejercicio:", error);
-    }
-  };
+    completeExercise(set.id, command, token);
+  }
 
-  const handleRepsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputReps(Number(event.target.value));
-  };
+  const onApply = useDebounce(saveSet, 1000);
 
-  const handleWeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputWeight(Number(event.target.value));
-  };
+  useEffect(() => {
+    onApply();
+  }, [set.isCompleted, set.weight, set.reps]);
 
   return (
     <div>
       <div className="grid grid-cols-[0.75fr_0.5fr] justify-between gap-x-8">
-        <div className="grid grid-cols-4">
-          <div className="flex flex-col items-center">
-            <span className="font-normal text-xs leading-4 text-slate-500">Set</span>
-            <span className="font-normal text-xs leading-5 text-slate-800">{set.orderNumber}</span>
+        <div className="grid grid-cols-3">
+          <div className="flex flex-col items-center gap-y-1">
+            <span className="font-medium text-xs leading-4 text-slate-500">Set</span>
+            <span className="font-bold text-xs leading-5 text-slate-500">{set.orderNumber}</span>
           </div>
-          <div className="flex flex-col items-center">
-            <span className="font-normal text-xs leading-4 text-slate-500">Reps Obj</span>
-            <span className="font-normal text-xs leading-5 text-slate-800">{set.targetReps}</span>
+          <div className="flex flex-col items-center gap-y-1">
+            <span className="font-medium text-xs leading-4 text-slate-500">Reps</span>
+            <span className="font-bold text-xs leading-5 text-slate-500">{set.targetReps}</span>
           </div>
-          <div className="flex flex-col items-center">
-            <span className="font-normal text-xs leading-4 text-slate-500">Peso Obj</span>
-            <span className="font-normal text-xs leading-5 text-slate-800">{set.targetWeight}</span>
-          </div>
-          <div className="flex flex-col items-center">
-            <span className="font-normal text-xs leading-4 text-slate-500">RPE</span>
-            <span className="font-normal text-xs leading-5 text-slate-800">{set.rpe}</span>
+          <div className="flex flex-col items-center gap-y-1">
+            <span className="font-medium text-xs leading-4 text-slate-500">RPE</span>
+            <span className="font-bold text-xs leading-5 text-slate-500">{set.rpe}</span>
           </div>
         </div>
 
-        <div className="grid grid-cols-3">
-          <div className="flex flex-col items-center">
-            <span className="font-bold text-xs leading-4 text-slate-500">Peso</span>
-            <input
-              type="number"
-              value={inputWeight}
-              onChange={handleWeightChange}
-              className="text-center border rounded px-1 text-xs w-7 h-7 border-slate-500"
-            />
-          </div>
-          <div className="flex flex-col items-center">
-            <span className="font-bold text-xs leading-4 text-slate-500">Reps</span>
-            <input
-              type="number"
-              value={inputReps}
-              onChange={handleRepsChange}
-              className="text-center border rounded px-1 text-xs w-7 h-7 border-slate-500"
-            />
+        <div className="grid grid-cols-3 gap-x-4">
+          <div className="flex flex-col items-center gap-y-1">
+            <span className="font-medium text-xs leading-4 text-slate-500">Peso</span>
+            <input type="text" placeholder="-" className="w-11 bg-transparent text-xs leading-5 text-center border border-slate-500 rounded-sm" 
+              value={set.weight || ''} inputMode="numeric" onChange={(e) => onSetWeight(e.currentTarget.value)}/>
           </div>
           <div className="flex flex-col items-center gap-y-1">
-            <span className="font-bold text-xs leading-4 text-slate-500">Comp</span>
-            <Checkbox checked={isChecked} onCheckedChange={(checked) => handleCheckboxChange(checked as boolean)} />
+            <span className="font-medium text-xs leading-4 text-slate-500">Reps</span>
+            <input type="text" placeholder="-" className="w-11 bg-transparent text-xs leading-5 text-center border border-slate-500 rounded-sm" 
+              value={set.reps || ''} inputMode="numeric" onChange={(e) => onSetReps(e.currentTarget.value)}/>
+          </div>
+          <div className="flex flex-col items-center gap-y-2">
+            <span className="font-medium text-xs leading-4 text-slate-500">Comp</span>
+            <Checkbox checked={set.isCompleted} onCheckedChange={(checked) => onSetComplete(checked as boolean)} />
           </div>
         </div>
       </div>

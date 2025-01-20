@@ -14,7 +14,7 @@ export default function ProgramWeeksBar({
   onSelect
 }: ProgramWeeksBarProps) {
   return (
-    <div className="w-full space-x-3 whitespace-nowrap overflow-auto pb-2">
+    <div className="w-full space-x-3 flex-none whitespace-nowrap overflow-auto pb-2">
       {
         options?.map((option, optionIndex) => (
           <button key={option.value} className={

@@ -1,5 +1,6 @@
 import { ProgramSeed } from "@/components/domain/program-form";
 import { ConfigProgram, ConfigSession } from "@/types/ProgramConfig";
+import { UserProgram } from "@/types/UserProgram";
 
 export function buildProgramSchema(program: ProgramSeed, accountId: string): ConfigProgram {
   
@@ -26,18 +27,18 @@ export function buildProgramSchema(program: ProgramSeed, accountId: string): Con
 }
 
 
-export async function saveProgramUser(configProgram: ConfigProgram, token: string | null) {
+export async function saveProgramUser(configProgram: ConfigProgram, token: string | null): Promise<UserProgram> {
   
   if (!token) {
     throw new Error('Waiting on token');
   }
 
-  await (await fetch(`${process.env.NEXT_PUBLIC_API_URL}/programs`, {
+  return await (await fetch(`${process.env.NEXT_PUBLIC_API_URL}/programs`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(configProgram)
-  }))
+  })).json();
 }

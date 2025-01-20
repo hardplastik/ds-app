@@ -3,6 +3,7 @@ import { ConfigExercise, ConfigSession, ConfigSet } from "@/types/ProgramConfig"
 import { PlusIcon } from "lucide-react";
 import { Button } from "./button";
 import NavBarHeader from "./nav-bar-header";
+import { validValue } from "@/services/utils";
 
 export interface ExerciseAndSetConfiguratorProps {
   session: ConfigSession
@@ -103,18 +104,6 @@ export function SetConfigurator({set, disabled, onUpdate}: SetConfiguratorProps)
     }
   }
 
-  function validValue(value: string): number | undefined {
-    
-    if (!value) {
-      return undefined;
-    }
-    
-    try {
-      return parseInt(value);
-    } catch {
-      return undefined
-    }
-  }
 
   return (
     <div>
