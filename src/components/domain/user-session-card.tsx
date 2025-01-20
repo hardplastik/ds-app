@@ -107,10 +107,14 @@ export function UserSetCard({set, onUpdate}: UserSetCardProps) {
   return (
     <div>
       <div className="grid grid-cols-[0.75fr_0.5fr] justify-between gap-x-8">
-        <div className="grid grid-cols-3">
+        <div className="grid grid-cols-4">
           <div className="flex flex-col items-center gap-y-1">
             <span className="font-medium text-xs leading-4 text-slate-500">Set</span>
             <span className="font-bold text-xs leading-5 text-slate-500">{set.orderNumber}</span>
+          </div>
+          <div className="flex flex-col items-center gap-y-1">
+            <span className="font-medium text-xs leading-4 text-slate-500">Peso</span>
+            <span className="font-bold text-xs leading-5 text-slate-500">{set.targetWeight}</span>
           </div>
           <div className="flex flex-col items-center gap-y-1">
             <span className="font-medium text-xs leading-4 text-slate-500">Reps</span>
