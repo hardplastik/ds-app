@@ -39,7 +39,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <title>Athlos One</title>
-      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+      <meta name="HandheldFriendly" content="true" />
       <body
         className={`${inter.variable} antialiased`}
       >
