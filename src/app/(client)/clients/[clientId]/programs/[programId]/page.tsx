@@ -66,7 +66,7 @@ export default function ProgramPage() {
     <section className="w-full h-dvh grid grid-rows-[48px_1fr] overflow-hidden">
       <NavBarHeader title={
               <div className="w-full grid grid-cols-[53px_1fr_53px]">
-                <button className="font-bold text-xs" onClick={() => router.replace(`/clients/${params.clientId}`)}>Regresar</button>
+                <button className="font-bold text-xs" onClick={() => router.back()}>Regresar</button>
                 <span className="font-medium text-sm leading-4 text-center">{userProgram?.name}</span>
                 <div className="col-span-3"></div>
               </div>
