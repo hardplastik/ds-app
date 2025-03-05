@@ -5,13 +5,23 @@ import { User } from "./User";
 export interface UserProgram {
   id: string;
   name: string;
+  user: User;
   enrollDatetime: string;
   isStarted: boolean;
   isCompleted: boolean;
-  user: User;
   weeks: number;
   sessionsPerWeek: number;
-  sessions: UserProgramSession[]
+  phase: string;
+  goal: string;
+  methodology: string;
+  intensity: string;
+  highSeries: number;
+  lowSeries: number;
+  minReps: number;
+  maxReps: number;
+  rirMin: number;
+  rirMax: number;
+  sessions?: UserProgramSession[]
 }
 
 export interface UserProgramSession {
@@ -22,6 +32,10 @@ export interface UserProgramSession {
   endDatetime?: string;
   isCompleted: boolean;
   exercises: UserProgramExercise[]
+}
+
+export interface UserCurrentSession extends UserProgramSession {
+  program: UserProgram;
 }
 
 export interface UserProgramExercise extends Exercise {

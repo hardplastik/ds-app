@@ -1,9 +1,8 @@
 "use client"
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { AuthProvider } from "../contexts/AuthContext";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "../ui/toaster";
 
 export interface ProviderWrapperProps {
@@ -19,7 +18,6 @@ export default function ProviderWrapper({children}: ProviderWrapperProps) {
       <AuthProvider>
           <QueryClientProvider client={client}>
             {children}
-            <ReactQueryDevtools initialIsOpen={false} />
           </QueryClientProvider>
         </AuthProvider>
         <Toaster />

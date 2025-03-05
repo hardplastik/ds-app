@@ -45,6 +45,10 @@ export function LoginForm() {
     if (user && user.isTrainer) {
       router.replace('/trainer-dashboard');
     }
+
+    if (user) { 
+      router.replace(`/clients/${user.id}`);
+    }
   }, [user])
 
 

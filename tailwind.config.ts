@@ -9,6 +9,12 @@ export default {
   ],
   theme: {
   	extend: {
+  		boxShadow: {
+  			'around': '0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+  			'around-md': '0 -6px 8px -1px rgba(0, 0, 0, 0.1), 0 6px 8px -1px rgba(0, 0, 0, 0.1)',
+  			'around-lg': '0 -8px 10px -1px rgba(0, 0, 0, 0.1), 0 8px 10px -1px rgba(0, 0, 0, 0.1)',
+  			'around-xl': '0 -10px 12px -1px rgba(0, 0, 0, 0.1), 0 10px 12px -1px rgba(0, 0, 0, 0.1)',
+  		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
