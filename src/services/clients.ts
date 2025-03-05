@@ -1,5 +1,5 @@
 import { User } from "@/types/User";
-import { UserCurrentSession, UserProgram } from "@/types/UserProgram";
+import { CurrentProgramSession, UserProgram } from "@/types/UserProgram";
 
 export async function getClient(clientId: string, token: string | null): Promise<User> {
 
@@ -28,7 +28,7 @@ export async function getClientPrograms(clientId: string, token: string | null):
   return response;
 }
 
-export async function getClientCurrentSession(clientId: string, token: string | null): Promise<UserCurrentSession> {
+export async function getClientCurrentSession(clientId: string, token: string | null): Promise<CurrentProgramSession> {
 
   if (!token) {
     throw new Error('Waiting on token');
@@ -47,7 +47,7 @@ export async function getClientCurrentSession(clientId: string, token: string | 
 }
 
 
-export async function getClientSessions(clientId: string, token: string | null): Promise<UserCurrentSession[]> {
+export async function getClientSessions(clientId: string, token: string | null): Promise<CurrentProgramSession[]> {
 
   if (!token) {
     throw new Error('Waiting on token');

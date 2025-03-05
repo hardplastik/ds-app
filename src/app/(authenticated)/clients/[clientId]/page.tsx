@@ -1,34 +1,21 @@
 "use client";
 import ActivityCard from "@/components/activity-card";
-import { useAuth } from "@/components/contexts/AuthContext";
 import QuickAccess from "@/components/quick-access";
 import CurrentSession from "@/components/ui/current-session";
 import EmptyActivity from "@/components/ui/empty-activity";
-import { getClient, getClientCurrentSession, getClientSessions } from "@/services/clients";
-import { UserCurrentSession } from "@/types/UserProgram";
-import { useQuery } from "@tanstack/react-query";
+import { useClient } from "@/hooks/use-client";
+import { useCurrentProgramSession } from "@/hooks/use-current-program-session";
+import { useClientSessions } from "@/hooks/use-client-sessions";
+import { CurrentProgramSession } from "@/types/UserProgram";
 import { BikeIcon, CalculatorIcon, ChartLineIcon, TimerIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 
 export default function ClientPage() {
-
-  const {token} = useAuth();
   const params = useParams<{clientId: string}>();
 
-  const { data: client } = useQuery({
-    queryKey: ['clients', params.clientId],
-    queryFn: () => getClient(params.clientId, token)
-  });
-
-  const {data: sessions} = useQuery({
-    queryKey: ['client-sessions', params.clientId],
-    queryFn: () => getClientSessions(params.clientId, token)
-  });
-
-  const {data: currentSession} = useQuery({
-    queryKey: ['client-current-session', params.clientId],
-    queryFn: () => getClientCurrentSession(params.clientId, token)
-  });
+  const { data: client } = useClient(params.clientId);
+  const { data: sessions } = useClientSessions(params.clientId);
+  const { data: currentSession } = useCurrentProgramSession(params.clientId);
 
   return (
     <div className="w-full h-full flex flex-col pt-6 gap-y-4 overflow-auto">
@@ -40,7 +27,7 @@ export default function ClientPage() {
       
 
       <div className="px-3">
-        {Boolean(currentSession) && <CurrentSession session={currentSession as UserCurrentSession} />}
+        {Boolean(currentSession) && <CurrentSession session={currentSession as CurrentProgramSession} />}
       </div>
 
       <div className="flex flex-col gap-y-4">

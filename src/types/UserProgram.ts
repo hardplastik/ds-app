@@ -34,7 +34,7 @@ export interface UserProgramSession {
   exercises: UserProgramExercise[]
 }
 
-export interface UserCurrentSession extends UserProgramSession {
+export interface CurrentProgramSession extends UserProgramSession {
   program: UserProgram;
 }
 
